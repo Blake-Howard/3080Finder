@@ -175,15 +175,14 @@ namespace _3080Finder
         public void NotifyViaTwilio(Site currentSite)
         {
             string messageBody = "3080 In Stock at " + Enum.GetName(typeof(SiteId), currentSite.id) + "\n " + currentSite.url;
-            const string accountSid = "AC6a5e8945f586f633ec253a3dc0493a7d";
-            const string authToken = "542d9617cfe1aede6bcfa06246a31592";
+            Security security = new Security();
 
-            TwilioClient.Init(accountSid, authToken);
+            TwilioClient.Init(security.AccountSid, security.AuthToken);
 
             var message = MessageResource.Create(
                 body: messageBody,
-                from: new Twilio.Types.PhoneNumber(""),
-                to: new Twilio.Types.PhoneNumber("")
+                from: new Twilio.Types.PhoneNumber(security.FromPhoneNumber),
+                to: new Twilio.Types.PhoneNumber(security.ToPhoneNumber)
             );
         }
 
