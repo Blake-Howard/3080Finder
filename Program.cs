@@ -25,11 +25,6 @@ namespace _3080Finder
             this.searchString = searchString;
         }
 
-        public Site(Enum id, string url)
-        {
-            this.id = id;
-            this.url = url;
-        }
     }
 
     class Program
@@ -54,11 +49,11 @@ namespace _3080Finder
                 Program locator = new Program();
                 locator.Search();
 
-                
                 Thread.Sleep(5000);
             }
 
         }
+
         public void Search()
         {
             List<Site> sitesToCheck = GatherSites();
@@ -84,10 +79,11 @@ namespace _3080Finder
                     OpenSite(currentSite);
                     NotifyViaToast(currentSite);
                     NotifyViaTwilio(currentSite);
-                    Thread.Sleep(60000);
+                    Thread.Sleep(300000);
                 }
             }
         }
+
         public bool ScrapeHTML(Site currentSite)
         {
             using (WebClient client = new WebClient())
@@ -96,15 +92,11 @@ namespace _3080Finder
                 {
                     string htmlCode = client.DownloadString(currentSite.url);
                     bool inStock = htmlCode.Contains(currentSite.searchString);
-                    //if (inStock & currentSite.id.Equals(SiteId.Newegg))
-                    //{
-                    //    inStock = !htmlCode.Contains("Add ASUS TUF Gaming NVIDIA GeForce RTX 3080 TUF-RTX3080-10G-GAMING Video Card to cart\">Add to cart");
-                    //}
-                    
+
                     return inStock;
                 }
-                    
-                catch(Exception ex)
+
+                catch (Exception ex)
                 {
                     Console.WriteLine("     Scrape Error");
                     Console.WriteLine("           " + ex.Message);
@@ -112,25 +104,26 @@ namespace _3080Finder
                 }
 
             }
+
         }
         public List<Site> GatherSites()
         {
             List<Site> sitesToCheck = new List<Site>();
 
-            //EVGA  sitesToCheck.Add(new Site(""));
+            //EVGA  No longer selling due to queue system
             //sitesToCheck.Add(new Site(SiteId.Evga, "https://www.evga.com/products/ProductList.aspx?type=0&family=GeForce+30+Series+Family&chipset=RTX+3080", "AddCart"));
             //NewEgg
             sitesToCheck.Add(new Site(SiteId.Newegg, "https://www.newegg.com/p/pl?N=100007709%20601357247%2050001315%2050001402&d=rtx+3080", "Add to cart"));
-            //B&H
+            //B&H No longer selling 3080
             //sitesToCheck.Add(new Site(SiteId.BH, "https://www.bhphotovideo.com/c/search?q=3080&filters=fct_category%3Agraphic_cards_6567", "Add to Cart"));
-            //Nividia
+            //Nividia No longer selling directly
             //sitesToCheck.Add(new Site(SiteId.Nvidia, "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080/"));
             //Amazon
-            //sitesToCheck.Add(new Site(SiteId.Amazon, "https://www.amazon.com/stores/page/6B204EA4-AAAC-4776-82B1-D7C3BD9DDC82?ingress=0", ">Add to Cart<"));
+            sitesToCheck.Add(new Site(SiteId.Amazon, "https://www.amazon.com/stores/page/6B204EA4-AAAC-4776-82B1-D7C3BD9DDC82?ingress=0", ">Add to Cart<"));
             //Asus
-            //sitesToCheck.Add(new Site(SiteId.Asus, "https://store.asus.com/us/search?q=3080&s_c=1", ">Buy Now<"));
+            sitesToCheck.Add(new Site(SiteId.Asus, "https://store.asus.com/us/search?q=3080&s_c=1", ">Buy Now<"));
             //MicroCenter
-            //sitesToCheck.Add(new Site(SiteId.MicroCenter, "https://www.microcenter.com/search/search_results.aspx?N=&cat=&Ntt=3080&searchButton=search", "IN STOCK"));
+            sitesToCheck.Add(new Site(SiteId.MicroCenter, "https://www.microcenter.com/search/search_results.aspx?N=&cat=&Ntt=3080&searchButton=search", "IN STOCK"));
             //Zotac
             //sitesToCheck.Add(new Site(SiteId.Zotac, "https://store.zotac.com/graphics-cards/geforce-rtx-30-series/geforce-rtxtm-3080-1", "ADD TO CART"));
             //BestBuy
